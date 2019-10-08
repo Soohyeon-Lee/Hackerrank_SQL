@@ -1,6 +1,6 @@
 SELECT
-    SQ1.SD AS SD,
-    MIN(SQ2.ED) AS ED
+    A.SD AS START_DATE,
+    MIN(B.ED) AS END_DATE
 FROM
     (
     SELECT
@@ -10,7 +10,7 @@ FROM
     LEFT JOIN PROJECTS AS B
     ON A.START_DATE=B.END_DATE
     WHERE B.END_DATE IS NULL
-    ) AS SQ1,
+    ) AS A,
     (
     SELECT
         B.END_DATE AS ED
@@ -19,12 +19,12 @@ FROM
     RIGHT JOIN PROJECTS AS B
     ON A.START_DATE=B.END_DATE
     WHERE A.START_DATE IS NULL
-    ) AS SQ2
+    ) AS B
 WHERE
-    SQ1.SD < SQ2.ED
+    A.SD<B.ED
 GROUP BY
-    SQ1.SD
+    A.SD
 ORDER BY
-    DATEDIFF(MIN(SQ2.ED), SD),
-    SD
-;
+    DATEDIFF(MIN(B.ED), START_DATE),
+    A.SD
+;                         

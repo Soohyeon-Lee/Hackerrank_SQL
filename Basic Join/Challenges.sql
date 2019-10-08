@@ -1,49 +1,46 @@
 SELECT
-    H.HACKER_ID AS HID,
-    H.NAME AS NAME,
-    COUNT(C.CHALLENGE_ID) AS CNT
+    A.HACKER_ID AS HID,
+    A.NAME AS NAME,
+    COUNT(B.CHALLENGE_ID) AS CNT
 FROM
-    CHALLENGES AS C
-INNER JOIN HACKERS AS H
-ON C.HACKER_ID=H.HACKER_ID
+    HACKERS AS A
+INNER JOIN CHALLENGES AS B
+ON A.HACKER_ID=B.HACKER_ID
 GROUP BY
-    H.HACKER_ID,
-    H.NAME
+    HID,
+    NAME
 HAVING
     CNT = 
         (
         SELECT
-            COUNT(A.CHALLENGE_ID) AS CNT
+            COUNT(CHALLENGE_ID)
         FROM
-            CHALLENGES AS A
-        INNER JOIN HACKERS AS B
-        ON A.HACKER_ID=B.HACKER_ID
+            CHALLENGES
         GROUP BY
-            B.HACKER_ID
+            HACKER_ID
         ORDER BY
-            CNT DESC
+            COUNT(CHALLENGE_ID) DESC
         LIMIT 1
         )
     OR CNT IN 
+            (
+            SELECT
+                SQ.CNT
+            FROM
                 (
                 SELECT
-                    SQ.CNT
+                    HACKER_ID AS HID,
+                    COUNT(CHALLENGE_ID) AS CNT
                 FROM
-                    (
-                    SELECT
-                        COUNT(A.CHALLENGE_ID) AS CNT
-                    FROM
-                        CHALLENGES AS A
-                    INNER JOIN HACKERS AS B
-                    ON A.HACKER_ID=B.HACKER_ID
-                    GROUP BY
-                        B.HACKER_ID
-                    ) AS SQ
+                    CHALLENGES
                 GROUP BY
-                    SQ.CNT
-                HAVING
-                    COUNT(SQ.CNT)=1
-                )
+                    HACKER_ID
+                ) AS SQ
+            GROUP BY
+                SQ.CNT
+            HAVING
+                COUNT(SQ.HID)=1
+            )
 ORDER BY
     CNT DESC,
     HID

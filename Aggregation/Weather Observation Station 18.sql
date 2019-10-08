@@ -1,5 +1,5 @@
 SELECT
-    ROUND(ABS(SQ.A-SQ.C) + ABS(SQ.B-SQ.D), 4)
+    ROUND(ABS(SQ.A-SQ.C)+ABS(SQ.B-SQ.D), 4)
 FROM
     (
     SELECT

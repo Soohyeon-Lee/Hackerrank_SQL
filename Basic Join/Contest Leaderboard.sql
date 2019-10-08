@@ -1,29 +1,24 @@
 SELECT
-    SQ.HID AS HID,
-    SQ.NAME AS NAME,
-    SUM(SQ.SCORE) AS SUM_SCORE
+    A.HACKER_ID AS HID,
+    A.NAME AS NAME,
+    SUM(B.MAX_SCORE) AS TOTAL
 FROM
-    (
-    SELECT
-        H.HACKER_ID AS HID,
-        H.NAME AS NAME,
-        S.CHALLENGE_ID,
-        MAX(S.SCORE) AS SCORE
-    FROM
-        SUBMISSIONS AS S
-    INNER JOIN HACKERS AS H
-    ON S.HACKER_ID=H.HACKER_ID
-    GROUP BY
-        H.HACKER_ID,
-        H.NAME,
-        S.CHALLENGE_ID
-    ) AS SQ
+    HACKERS AS A
+INNER JOIN
+        (
+        SELECT
+            HACKER_ID AS HID,
+            CHALLENGE_ID AS CID,
+            MAX(SCORE) AS MAX_SCORE
+        FROM
+            SUBMISSIONS
+        GROUP BY
+            HID, CID
+        ) AS B ON A.HACKER_ID=B.HID
 GROUP BY
-    SQ.HID,
-    SQ.NAME
+    HID, NAME
 HAVING
-    SUM_SCORE > 0
+    TOTAL>0
 ORDER BY
-    SUM_SCORE DESC,
-    HID
+    TOTAL DESC, HID
 ;

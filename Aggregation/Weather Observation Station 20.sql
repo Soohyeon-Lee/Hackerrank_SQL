@@ -1,8 +1,17 @@
+SET @R=-1;
+
 SELECT
-    ROUND(S.LAT_N, 4)
+    ROUND(AVG(SQ.LAT_N), 4)
 FROM
-    STATION AS S
+    (
+    SELECT
+        @R:=@R+1 AS RN,
+        LAT_N
+    FROM
+        STATION
+    ORDER BY
+        LAT_N
+    ) AS SQ
 WHERE
-    (SELECT COUNT(*) FROM STATION WHERE LAT_N < S.LAT_N)
-    =(SELECT COUNT(*) FROM STATION WHERE LAT_N > S.LAT_N)
+    SQ.RN IN (CEIL(@R/2), FLOOR(@R/2))
 ;

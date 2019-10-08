@@ -1,12 +1,13 @@
 SELECT
-    CONCAT(NAME, '(', SUBSTR(OCCUPATION, 1, 1), ')') AS N
+    CONCAT(NAME, '(', LEFT(OCCUPATION,1), ')')
 FROM
     OCCUPATIONS
 ORDER BY
     NAME
 ;
+
 SELECT
-    CONCAT('There are a total of', ' ', COUNT(NAME), ' ', LOWER(OCCUPATION), 's.') AS N
+    CONCAT('There are a total of ', COUNT(NAME), ' ', LOWER(OCCUPATION), 's.')
 FROM
     OCCUPATIONS
 GROUP BY
